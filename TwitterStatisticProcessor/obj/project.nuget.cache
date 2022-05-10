@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "UG2zf1yLMZtuYmnSpWMLrAQs2RdN/Bw1Ep82rlgykLyFrVnsglKWuSaZn0MK8fkjTLI+8d1EsmPFEw75l4j57w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Tre\\Code\\TwitterStatisticsProcessor\\TwitterStatisticProcessor\\TwitterStatisticProcessor.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Tre\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\Tre\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\Tre\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
+    "C:\\Users\\Tre\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
+    "C:\\Users\\Tre\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.6.3\\swashbuckle.aspnetcore.swaggergen.5.6.3.nupkg.sha512",
+    "C:\\Users\\Tre\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\5.6.3\\swashbuckle.aspnetcore.swaggerui.5.6.3.nupkg.sha512"
+  ],
+  "logs": []
+}
