@@ -12,50 +12,61 @@ namespace TwitterStatisticProcessor.Services
 {
     public interface ITweetProcessorService
     {
-        TwitterStatistics GetStatistics();
-
         Task ProcessTweets();
     }
     public class TweetProcessorService : BackgroundService, ITweetProcessorService
     {
-        private int numberOfTweets = 0;
-        private float averageTweetsPerMinute = 0;
         private DateTime ApplicationStartTime = DateTime.Now;
+        private readonly ITweetRepository tr;
 
-        public TwitterStatistics GetStatistics()
+        public TweetProcessorService(ITweetRepository tr)
         {
-            TimeSpan timeElapsed = DateTime.Now - ApplicationStartTime;
-            averageTweetsPerMinute = numberOfTweets / timeElapsed.Minutes;
-            return new TwitterStatistics(numberOfTweets, averageTweetsPerMinute);
+            this.tr = tr;
         }
 
         public async Task ProcessTweets()
         {
-            await Task.Run(() =>
-            {
-                string AccessToken = "";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.twitter.com/2/tweets/sample/stream");
-                request.Headers.Add("Authorization", "Bearer " + AccessToken);
-                request.Timeout = Timeout.Infinite;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream());
+            string AccessToken = "AAAAAAAAAAAAAAAAAAAAAAJocQEAAAAASCvTeykliHE1maTYL%2BUHsa4lC4I%3DLavVdHUR8U7ylzMSR9GOwSjndGDt5EorfIH7S2Og7K9eYScWOH";
+            HttpClient client = new HttpClient();
+            Uri twitterUrl;
+            Uri.TryCreate("https://api.twitter.com/", new UriCreationOptions(), out twitterUrl);
+            client.BaseAddress = twitterUrl;
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AccessToken);
+            var response = await client.GetStreamAsync("/2/tweets/sample/stream");
+            var sr = new StreamReader(response);
 
-                string str = reader.ReadLine();
+            tr.SetStartTime(ApplicationStartTime);
 
-                while (str != null)
-                {
-                    numberOfTweets++;
-                    Console.WriteLine(str);
-                    str = reader.ReadLine();
+            var str = await sr.ReadLineAsync();
+            while (str != null) {
+                tr.IncrementTweetCount();
+                Console.WriteLine(str);
+                str = await sr.ReadLineAsync();
+            }
 
-                }
-            });
+
+
+            // request.Timeout = Timeout.Infinite;
+            // HttpWebResponse response = client.GetResponseAsync();
+            // StreamReader reader = new StreamReader(response.GetResponseStream());
+
+            // string str = reader.ReadLine();
+
+            // while (str != null)
+            // {
+            //     numberOfTweets++;
+            //     Console.WriteLine(str);
+            //     str = reader.ReadLine();
+
+            // }
         }
-
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await ProcessTweets();
+            while (!stoppingToken.IsCancellationRequested) {
+                await ProcessTweets();
+            } 
         }
     }
+
 }

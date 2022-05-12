@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using TwitterStatisticProcessor.Models;
 using TwitterStatisticProcessor.Services;
 
 namespace TwitterStatisticProcessor
@@ -33,8 +34,12 @@ namespace TwitterStatisticProcessor
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TwitterStatisticProcessor", Version = "v1" });
             });
-            services.AddScoped<ITweetProcessorService, TweetProcessorService>();
-            services.AddHostedService<TweetProcessorService>();
+            services.AddHostedService<TweetProcessorService>()
+                .AddSingleton<ITweetRepository, TweetRepository>()
+                .AddSingleton<ITweetProcessorService, TweetProcessorService>(tp => {
+                    var r = tp.GetRequiredService<ITweetRepository>();
+                    return new TweetProcessorService(r);
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,4 +64,5 @@ namespace TwitterStatisticProcessor
             });
         }
     }
+
 }

@@ -14,19 +14,19 @@ namespace TwitterStatisticProcessor.Controllers
     public class TwitterStatisticsController : ControllerBase
     {
 
-        private readonly ITweetProcessorService _twitterProcessorService;
         private readonly ILogger<TwitterStatisticsController> _logger;
+        private readonly ITweetRepository _tweetRepo;
 
-        public TwitterStatisticsController(ITweetProcessorService tweetProcessorService,ILogger<TwitterStatisticsController> logger)
+        public TwitterStatisticsController(ILogger<TwitterStatisticsController> logger, ITweetRepository tr)
         {
-            _twitterProcessorService = tweetProcessorService;
+            _tweetRepo = tr;
             _logger = logger;
         }
 
         [HttpGet]
         public TwitterStatistics Get()
         {
-            return _twitterProcessorService.GetStatistics();
+            return new TwitterStatistics(_tweetRepo.GetTweetCount(), _tweetRepo.GetAverageTweetCount());
         }
     }
 }
